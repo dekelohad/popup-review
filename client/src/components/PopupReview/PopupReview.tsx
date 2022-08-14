@@ -1,10 +1,12 @@
 import { useNavigate } from 'react-router-dom';
 import { Helmet, HelmetProvider } from 'react-helmet-async';
+import { nanoid } from 'nanoid'
+import { useCSVReader } from 'react-papaparse';
 import { toast } from 'react-toastify';
-import { addReviews, deleteReview, deleteReviews } from '../../services/ReviewServices/ReviewServices';
 import * as ROUTES from '../../constants/routes';
 import { Review } from '../../models';
 import { titles, texts } from '../../assets/generic-reviews';
+import { getReviews, addReviews, deleteReview, deleteReviews } from "../../services/ReviewServices/ReviewServices";
 import { Loader, ReviewCommentBar, ReviewBubble } from '../../components';
 import {
 
@@ -40,7 +42,7 @@ interface PopupReviewProps {
 
 const PopupReview = ({ loading, showPopup, setShowPopup, reviews, setReviews, Content }: PopupReviewProps) => {
   const navigate = useNavigate();
-
+  const { CSVReader } = useCSVReader();
 
   const handleDeleteReview = async (id: string) => {
     const newReviews = reviews.filter(review => review._id !== id);
@@ -54,10 +56,36 @@ const PopupReview = ({ loading, showPopup, setShowPopup, reviews, setReviews, Co
   };
 
   const createGenericReviews = (reviewsAmount: number) => {
+    const newReviews = [];
+    for (let i = 0; i < reviewsAmount; i++) {
+      const title = titles[Math.floor(Math.random() * titles.length)];
+      const content = texts[Math.floor(Math.random() * texts.length)];
+      const review = {
+        title: title,
+        content: content,
+        _id: nanoid(),
+      };
+      newReviews.push(review);
+    }
+    setReviews([...reviews, ...newReviews]);
   };
 
 
   const importOnUploadAccepted = (results: any) => {
+    const newReviews = [];
+    const reviewsImportedFromCSV = results.data;
+    const totalReviewsToCreate = results.data.length - 1;
+    for (let i = 0; i < totalReviewsToCreate; i++) {
+      const title = reviewsImportedFromCSV[i][0];
+      const content = reviewsImportedFromCSV[i][1];
+      const review = {
+        title: title,
+        content: content,
+        _id: nanoid(),
+      };
+      newReviews.push(review);
+    }
+    setReviews([...reviews, ...newReviews]);
   }
 
   const handleSaveReviews = async () => {
@@ -69,7 +97,6 @@ const PopupReview = ({ loading, showPopup, setShowPopup, reviews, setReviews, Co
       }
     });
   };
-
   return (
     <>
       <HelmetProvider>
@@ -108,6 +135,25 @@ const PopupReview = ({ loading, showPopup, setShowPopup, reviews, setReviews, Co
                   </InstructionsButtonInnerContainer>
                   <RightArrowIcon />
                 </InstructionsButton>
+                <CSVReader
+                  onUploadAccepted={(results: any) => importOnUploadAccepted(results)}
+                >
+                  {({
+                    getRootProps,
+                    ProgressBar,
+                  }: any) => (
+                    <>
+                      <InstructionsButton {...getRootProps()}>
+                        <InstructionsButtonInnerContainer>
+                          <ImportIcon />
+                          Import from file
+                        </InstructionsButtonInnerContainer>
+                        <RightArrowIcon />
+                      </InstructionsButton>
+                      <ProgressBar />
+                    </>
+                  )}
+                </CSVReader>
                 <InstructionsButton onClick={() => createGenericReviews(10)}>
                   <InstructionsButtonInnerContainer>
                     <AddIcon />
