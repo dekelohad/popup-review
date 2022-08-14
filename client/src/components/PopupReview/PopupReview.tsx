@@ -1,6 +1,7 @@
 import { useNavigate } from 'react-router-dom';
 import { Helmet, HelmetProvider } from 'react-helmet-async';
 import { toast } from 'react-toastify';
+import { addReviews, deleteReview, deleteReviews } from '../../services/ReviewServices/ReviewServices';
 import * as ROUTES from '../../constants/routes';
 import { Review } from '../../models';
 import { titles, texts } from '../../assets/generic-reviews';
@@ -42,9 +43,14 @@ const PopupReview = ({ loading, showPopup, setShowPopup, reviews, setReviews, Co
 
 
   const handleDeleteReview = async (id: string) => {
+    const newReviews = reviews.filter(review => review._id !== id);
+    setReviews(newReviews);
+    deleteReview(id);
   };
 
   const handleClearAllReviews = async () => {
+    setReviews([]);
+    await deleteReviews();
   };
 
   const createGenericReviews = (reviewsAmount: number) => {
@@ -55,7 +61,15 @@ const PopupReview = ({ loading, showPopup, setShowPopup, reviews, setReviews, Co
   }
 
   const handleSaveReviews = async () => {
+    addReviews(reviews);
+    toast.success('The Reviews Saved Successfully', {
+      position: 'bottom-center',
+      style: {
+        fontSize: '3rem',
+      }
+    });
   };
+
   return (
     <>
       <HelmetProvider>
@@ -94,7 +108,6 @@ const PopupReview = ({ loading, showPopup, setShowPopup, reviews, setReviews, Co
                   </InstructionsButtonInnerContainer>
                   <RightArrowIcon />
                 </InstructionsButton>
-
                 <InstructionsButton onClick={() => createGenericReviews(10)}>
                   <InstructionsButtonInnerContainer>
                     <AddIcon />
