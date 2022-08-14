@@ -51,10 +51,34 @@ const createReviews = asyncHandler(async (req, res) => {
 */
 
 const deleteReview = asyncHandler(async (req, res) => {
+  const { id } = req.params;
+  const review = await Review.findByIdAndDelete(id);
+
+  if (!review) {
+    logger.error(`${review}, review not found`);
+    res.status(401);
+    throw new Error("Review not found");
+  } else {
+    logger.info(`${review} review deleted successfully`);
+    res.status(201).json({
+      data: review,
+    });
+  }
 });
 
-
 const deleteReviews = asyncHandler(async (req, res) => {
+  const reviews = await Review.deleteMany({});
+  if (reviews) {
+    logger.info(`${reviews} reviews deleted successfully`);
+    res.status(200).json({
+      data: reviews,
+    });
+  }
+  else {
+    logger.error(`Error Occurred while deleting reviews`);
+    res.status(400);
+    throw new Error("Error Occurred while deleting reviews");
+  }
 });
 
 module.exports = {
