@@ -1,4 +1,6 @@
 const asyncHandler = require("express-async-handler");
+const logger = require("../pino-logging/logger");
+const Review = require("../models/review");
 require("dotenv").config();
 
 /*
@@ -8,6 +10,17 @@ require("dotenv").config();
 */
 
 const getReviews = asyncHandler(async (req, res) => {
+  const reviews = await Review.find({});
+  if (reviews) {
+    logger.info(`reviews, ${reviews} found successfully.`);
+    res.status(200).json({
+      reviews: reviews,
+    });
+  } else {
+    logger.error(`Error Occurred while getting reviews`);
+    res.status(400);
+    throw new Error("Error Occurred while getting reviews");
+  }
 });
 
 /*
@@ -17,6 +30,18 @@ const getReviews = asyncHandler(async (req, res) => {
 */
 
 const createReviews = asyncHandler(async (req, res) => {
+  const { reviews } = req.body
+  let newReviews = [];
+  for (let i = 0; i < reviews.length; i++) {
+    const review = await Review.create({
+      title: reviews[i].title,
+      content: reviews[i].content,
+    });
+    newReviews.push(review);
+  }
+  res.status(201).json({
+    data: newReviews,
+  });
 });
 
 /*
