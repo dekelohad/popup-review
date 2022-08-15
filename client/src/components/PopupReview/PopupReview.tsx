@@ -6,7 +6,7 @@ import { toast } from 'react-toastify';
 import * as ROUTES from '../../constants/routes';
 import { Review } from '../../models';
 import { titles, texts } from '../../assets/generic-reviews';
-import { getReviews, addReviews, deleteReview, deleteReviews } from "../../services/ReviewServices/ReviewServices";
+import { addReviews, deleteReview, deleteReviews } from "../../services/ReviewServices/ReviewServices";
 import { Loader, ReviewCommentBar, ReviewBubble } from '../../components';
 import {
 
@@ -56,7 +56,7 @@ const PopupReview = ({ loading, showPopup, setShowPopup, reviews, setReviews, Co
   };
 
   const createGenericReviews = (reviewsAmount: number) => {
-    const newReviews = [];
+    const newReviews: Review[] = [];
     for (let i = 0; i < reviewsAmount; i++) {
       const title = titles[Math.floor(Math.random() * titles.length)];
       const content = texts[Math.floor(Math.random() * texts.length)];
@@ -72,7 +72,7 @@ const PopupReview = ({ loading, showPopup, setShowPopup, reviews, setReviews, Co
 
 
   const importOnUploadAccepted = (results: any) => {
-    const newReviews = [];
+    const newReviews: Review[] = [];
     const reviewsImportedFromCSV = results.data;
     const totalReviewsToCreate = results.data.length - 1;
     for (let i = 0; i < totalReviewsToCreate; i++) {

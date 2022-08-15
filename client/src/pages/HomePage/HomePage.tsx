@@ -4,7 +4,7 @@ import { Review } from '../../models';
 import { PopupReview } from '../../components';
 import { ShowHidePopupButton } from "./HomePage.style";
 
-const BASE_URL = 'https://popup-review.herokuapp.com/';
+const BASE_URL = 'https://popup-review.herokuapp.com/api';
 
 const HomePage = () => {
   const [showPopup, setShowPopup] = useState<boolean>(true);
