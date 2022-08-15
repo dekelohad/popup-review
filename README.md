@@ -1,6 +1,9 @@
 # **Popup Review Management Component**
 The component allows users to add reviews and delete reviews.
 
+Live demo:
+https://popup-review.herokuapp.com/
+
 ## Technologies:
 React, Styled Components, MongoDB, Express.js, Node.js.
 
