@@ -5,7 +5,7 @@ Live demo:
 https://popup-review.herokuapp.com/
 
 ## Technologies:
-React, Styled Components, MongoDB, Express.js, Node.js.
+React,TypeScript, Styled Components, MongoDB, Express.js, Node.js.
 
 ## API routes:
 ### The API contains 4 routers.
