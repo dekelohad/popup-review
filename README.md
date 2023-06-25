@@ -2,7 +2,7 @@
 The component allows users to add reviews and delete reviews.
 
 Live demo:
-https://popup-review.herokuapp.com/
+[popup-review.netlify.app](https://popup-review.netlify.app/)
 
 ## Technologies:
 React,TypeScript, Styled Components, MongoDB, Express.js, Node.js.
